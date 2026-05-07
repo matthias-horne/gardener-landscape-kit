@@ -530,6 +530,12 @@ func (c *Components) getImageVector(cref ComponentReference, originalRef bool) (
 				if imgex.ResourceID != nil {
 					name = imgex.ResourceID.Name
 				}
+				if name == "etcd-wrapper-next" {
+					name = "etcd-wrapper"
+				}
+				if name == "etcdbrctl-next" {
+					name = "etcdbrctl"
+				}
 				found := false
 			lookup:
 				for _, dep := range c.dependencies[ComponentReference(*imgex.ReferencedComponent)] {
@@ -552,6 +558,9 @@ func (c *Components) getImageVector(cref ComponentReference, originalRef bool) (
 						}
 					}
 					return nil, fmt.Errorf("could not find image %q in referenced component %q: [%s]", name, *imgex.ReferencedComponent, strings.Join(names, ", "))
+					//Error: could not add components image overwrites for component github.com/gardener/gardener:v1.139.1:
+					// could not get image vector for dependent component github.com/gardener/etcd-druid:v0.36.1 of component github.com/gardener/gardener:v1.139.1:
+					// could not find image "etcd-wrapper-next" in referenced component "github.com/gardener/etcd-wrapper:v0.7.0": [etcd-wrapper]
 				}
 			}
 			if img.Ref != nil && img.Repository != nil && img.Tag != nil {
